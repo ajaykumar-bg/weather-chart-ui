@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
 	LineChart,
 	Line,
@@ -8,23 +8,28 @@ import {
 	Tooltip,
 } from 'recharts';
 
-function WeatherChart({ weatherData }) {
-	const [chartData, setChartData] = useState([]);
+const getWeatherData = (weatherData) => {
+	if (weatherData) {
+		const { current, forecast } = weatherData;
+		const initial = [{ name: 'Current', temp: current.temp_f }];
+		const remaining = forecast.map((item) => {
+			return {
+				name: item.time,
+				temp: item.temp_f,
+			};
+		});
+		return [...initial, ...remaining];
+	}
+};
 
-	useEffect(() => {
-		if (weatherData) {
-			const { current, forecast } = weatherData;
-			const initial = [{ name: 'Current', temp: current.temp_f }];
-			const remaining = forecast.map((item) => {
-				return {
-					name: item.time,
-					temp: item.temp_f,
-				};
-			});
-			const final = [...initial, ...remaining];
-			setChartData(final);
-		}
-	}, [weatherData]);
+function WeatherChart({ weatherData }) {
+	const chartData = React.useMemo(
+		() => getWeatherData(weatherData),
+		[weatherData]
+	);
+	if (!weatherData) {
+		return null;
+	}
 
 	return (
 		<LineChart

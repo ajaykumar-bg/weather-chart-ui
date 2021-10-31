@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import { Box, CircularProgress } from '@mui/material';
+
 import WeatherChart from './weather-chart.component';
 import { SERVER_URL } from '../../constants';
-import { Card, CardHeader, CardContent } from '@mui/material';
 
 const API_URL = `${SERVER_URL}/weather-data`;
 
@@ -43,19 +44,20 @@ function WeatherContainer() {
 	}, []);
 
 	if (loading) {
-		return <div>Loading...</div>;
+		return (
+			<Box sx={{ display: 'flex' }}>
+				<CircularProgress />
+			</Box>
+		);
 	}
 	if (error) {
 		return <div className='error'>{error}</div>;
 	}
 
 	return (
-		<Card>
-			<CardHeader title='Weather Chart' />
-			<CardContent>
-				<WeatherChart weatherData={weatherData} />
-			</CardContent>
-		</Card>
+		<Box sx={{ display: 'flex' }}>
+			<WeatherChart weatherData={weatherData} />
+		</Box>
 	);
 }
 

@@ -12,6 +12,16 @@ function WeatherContainer() {
 	const [weatherData, setWeatherData] = useState(null);
 	const [error, setError] = useState('');
 
+	const MINUTE_MS = 5000;
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			getWeatherDetails();
+		}, MINUTE_MS);
+
+		return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+	}, []);
+
 	const getWeatherDetails = () => {
 		setLoading(true);
 		let url = API_URL;
